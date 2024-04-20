@@ -202,8 +202,8 @@ def tri_binaire(pl_liste: list[int]) -> list[int]:
 if __name__ == "__main__":
     liste: list[int] 
 
-    liste = [4, 2, 7, 1, 3, 6, 9]
-    # liste = [randint(0, 99) for _ in range(40)]
+    # liste = [4, 2, 7, 1, 3, 6, 9]
+    liste = [randint(0, 99) for _ in range(20)]
 
     print(liste)
     liste = tri_binaire(liste)
