@@ -25,11 +25,20 @@ class MesVariables:
 
     @classmethod
     def __getitem__(cls, *args):
+        # print("^", args)
         return cls.getvalue(*args)
 
     @classmethod
     def __setitem__(cls, *args):
+        # print("v", args)
         if type(args[0]) in (list, tuple):
+            nb_params = len(args[0])
+            nb_valeurs = len(args[1])
+            if nb_params != nb_valeurs:
+                msg: str = f"Le nombre de valeurs affectees ({nb_valeurs}) ne correspond pas "
+                msg += f"au nombre de variables ({nb_params})."
+                raise IndexError(msg)
+
             for index, arg in enumerate(args[0]):
                 if type(args[1]) in (list, tuple):
                     cls.valeurs[arg] = args[1][index]
@@ -39,16 +48,32 @@ class MesVariables:
             cls.valeurs[args[0]] = args[1]
 
 
+# Decorateur de recuperation des erreurs
+def print_error(fonction):
 
+    def wrapper(*args, **kwargs):
+        try:
+            return fonction(*args, **kwargs)
+        except Exception as error:
+            print(f"def {fonction.__name__}():", error)
+
+    return wrapper
+
+
+@print_error
 def write():
     var = MesVariables()
+
     var["user"] = "Mcj"
     var["pass", "dblauth"] = "mdp", "1234"
     var["index"] = 1
     var["index"] += 10
 
+
+@print_error
 def read():
     res = MesVariables()
+
     print(1, res["user"])
     print(2, res["pass"])
     print(3, res["user", "pass"])
@@ -59,9 +84,29 @@ def read():
     print(res["inconnu"])
 
 
-if __name__ == '__main__':
+@print_error
+def write_read():
+    var = MesVariables()
+
+    var["connect"] = {}
+    var["connect"]["user"] = "Mcj"
+    var["connect"]["pass"] = "mdpdict"
+    print(var())
+
+    var["pass", "dblauth", "trois"] = "mdp", "1234"
+
+
+@print_error
+def calcul():
+    return 5 / 0
+
+
+def main():
     write()
-    try:
-        read()
-    except Exception as error:
-        print(error)
+    read()
+    write_read()
+    calcul()
+
+
+if __name__ == '__main__':
+    main()
