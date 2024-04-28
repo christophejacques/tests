@@ -41,8 +41,13 @@ def def_param(*params):
 
         def wrapper(*args, **kwargs):
             try:
-                return fonction(*args, **kwargs)
+                if params[0] == "=":
+                    print(">", 
+                        fonction.__name__, 
+                        list(reversed(Vars.data[fonction.__name__]["liste"])), 
+                        args)
 
+                return fonction(*args, **kwargs)
             except Exception as error:
                 print(f"Def {Vars.fonction}():", error)
 
@@ -52,6 +57,7 @@ def def_param(*params):
 
 # decorateur de test des parametres utilises
 def check_error(nom_fonction):
+
     def decorateur(fonction):
         def wrapper(*args, **kwargs):
             try:
@@ -102,13 +108,6 @@ class Nombre:
         return self.valeur + valeur
 
 
-n = Nombre(3)
-print(n.addition())
-print(n.addition("4"))
-print(n.addition(4))
-exit()
-
-
 @check_error("concat")
 @def_param("c1", Chaine | None)
 @def_param("c2", Chaine)
@@ -129,7 +128,7 @@ def multipli(a, b):
     return (a * b)
 
 
-@check_error("somme")
+# @check_error("somme")
 @def_param("i1", int)
 @def_param("i2", int)
 @def_param("=", int)
@@ -140,22 +139,27 @@ def somme(a, b):
 
 
 def main():
+    # n = Nombre(3)
+    # print(n.addition())
+    # print(n.addition("4"))
+    # print(n.addition(4))
+
     print(somme(1, 2, 3))
     print(somme(3, "4"))
     print(somme(0, 8))
     print(somme(6, 8))
 
-    print(multipli(1, 2, 3))
-    print(multipli(3))
-    print(multipli(3, "4"))
-    print(multipli(0, 8))
-    print(multipli(4, 8))
+    # print(multipli(1, 2, 3))
+    # print(multipli(3))
+    # print(multipli(3, "4"))
+    # print(multipli(0, 8))
+    # print(multipli(4, 8))
 
-    print(concat(1, Chaine('suite')))
-    print(concat(Chaine("Une"), 'suite'))
-    print(concat(None, Chaine('suite')))
-    print(concat(Chaine("Une"), None))
-    print(concat(Chaine("Une"), Chaine('suite')))
+    # print(concat(1, Chaine('suite')))
+    # print(concat(Chaine("Une"), 'suite'))
+    # print(concat(None, Chaine('suite')))
+    # print(concat(Chaine("Une"), None))
+    # print(concat(Chaine("Une"), Chaine('suite')))
 
 
 if __name__ == '__main__':
